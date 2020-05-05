@@ -66,3 +66,10 @@ h3 {
 .stat {
 	background-color: #ffbd00;
 }
+.shoot {
+	background-color: green;
+	border-radius: 50%;
+}
+.bam {
+	background-color: purple;
+}
