@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
 	const grid = document.querySelector(".grid");
 	const result = document.querySelector("#result");
 	let interval = 0;
@@ -6,10 +6,8 @@ window.onload = function() {
 	let currentShooterIndex = 202;
 	let currentIndex = 0;
 	let direction = 1;
-	const invadersTakkenDown = [];
-	let intervalTime = 0;
-	let shootInterval = 0;
-	let currentShoot = 202;
+	const invadersTakenDown = [];
+
 	const invaders = [
 		0,
 		1,
@@ -56,52 +54,104 @@ window.onload = function() {
 			var block = document.createElement("div");
 			grid.appendChild(block);
 		}
+		const squares = document.querySelectorAll(".grid div");
+		let currentIndex = 0;
+		let currentShooterIndex = 202;
+		squares[202].classList.add("shooter");
+		invaders.forEach((invader) =>
+			squares[currentIndex + invader].classList.add("invaders")
+		);
 	}
 
 	createBoard();
 
 	function start() {
 		//reset
-		clearBoard();
-		const squares = document.querySelectorAll(".grid div");
-		let currentIndex = 0;
+		clearInterval(interval);
+		let score = 0;
 		let currentShooterIndex = 202;
-		squares.forEach((sq) => sq.classList.remove("invaders"));
-		squares.forEach((sq) => sq.classList.remove("shooter"));
-		for (let i = 0; i < invaders.length; i++) {
-			squares[invaders[currentIndex + i]].classList.add("invaders");
-		}
-		squares[202].classList.add("shooter");
-		console.log(squares);
+		let currentIndex = 0;
+		let direction = 1;
+		const invadersTakenDown = [];
+		clearBoard();
+		// const squares = document.querySelectorAll(".grid div");
+		// let currentIndex = 0;
+		// let currentShooterIndex = 202;
+		// squares.forEach((sq) => sq.classList.remove("invaders"));
+		// squares.forEach((sq) => sq.classList.remove("shooter"));
+		// for (let i = 0; i < invaders.length; i++) {
+		// 	squares[invaders[currentIndex + i]].classList.add("invaders");
+		// }
+		// squares[202].classList.add("shooter");
+		// console.log(squares);
 		interval = setInterval(invMove, 500);
-
-		win();
-		lose();
 	}
 
 	//Invaders move
 	function invMove() {
 		const x = parseInt(document.querySelector("#dim-x").value);
 		const squares = document.querySelectorAll(".grid div");
-		const aliens = document.querySelectorAll(".invaders");
-		let leftEdge = 0;
-		let rightEdge = x;
-		let lastLeft = aliens[0];
-		let lastRight = aliens[aliens.length - 1];
-		if (lastRight % x === x - 1 && direction === 1) {
-			currentIndex += x;
-			direction = -1;
-		} else if (lastLeft % x === 0 && direction === -1) {
-			currentIndex += x;
-			direction = 1;
+		// let leftEdge = 0;
+		// let rightEdge = x;
+		// let lastLeft = aliens[0];
+		// let lastRight = aliens[aliens.length - 1];
+		// if (lastRight % x === x - 1 && direction === 1) {
+		// 	currentIndex += x;
+		// 	direction = -1;
+		// } else if (lastLeft % x === 0 && direction === -1) {
+		// 	currentIndex += x;
+		// 	direction = 1;
+		// }
+
+		const leftEdge = invaders[0] % x === 0;
+		const rightEdge = invaders[invaders.length - 1] % x === x - 1;
+
+		if ((leftEdge && direction === -1) || (rightEdge && direction === 1)) {
+			direction = x;
+		} else if (direction === x) {
+			if (leftEdge) direction = 1;
+			else direction = -1;
 		}
 
-		squares.forEach((sq) => sq.classList.remove("invaders"));
+		// squares.forEach((sq) => sq.classList.remove("invaders"));
+		for (let i = 0; i <= invaders.length - 1; i++) {
+			squares[invaders[i]].classList.remove("invaders");
+		}
 		for (let i = 0; i <= invaders.length - 1; i++) {
 			invaders[i] += direction;
 		}
-		for (let i = 0; i < invaders.length; i++) {
-			squares[invaders[currentIndex + i]].classList.add("invaders");
+		// for (let i = 0; i < invaders.length; i++) {
+		// 	squares[invaders[currentIndex + i]].classList.add("invaders");
+		// }
+		for (let i = 0; i <= invaders.length - 1; i++) {
+			//ADD IF LATER
+			if (!invadersTakenDown.includes(i)) {
+				squares[invaders[i]].classList.add("invaders");
+			}
+		}
+
+		// win();
+		// lose();
+
+		if (
+			squares[currentShooterIndex].classList.contains("invaders", "shoot")
+		) {
+			result.textContent = "Game Over";
+			squares[currentShooterIndex].classList.add("bam");
+			clearInterval(interval);
+		}
+
+		for (let i = 0; i <= invaders.length - 1; i++) {
+			if (invaders[i] > squares.length - (x - 1)) {
+				result.textContent = "Game Over";
+				clearInterval(interval);
+			}
+		}
+
+		//ADD LATER
+		if (invadersTakenDown.length === invaders.length) {
+			result.textContent = "You Win";
+			clearInterval(interval);
 		}
 	}
 
@@ -116,43 +166,83 @@ window.onload = function() {
 		else if (e.keyCode === 39 && currentShooterIndex % x < x - 1)
 			currentShooterIndex += 1;
 		squares[currentShooterIndex].classList.add("shooter");
-		currentShoot = currentShooterIndex;
 	}
 
 	//shooter one shoot
 	function shoot(e) {
-		if (e.keyCode === 13) shootInterval = setInterval(shootDown, 100);
-	}
-
-	function shootDown() {
 		const squares = document.querySelectorAll(".grid div");
 		const x = parseInt(document.querySelector("#dim-x").value);
+		let currentShoot = currentShooterIndex;
+		let shootInterval;
+		// if (e.keyCode === 13) shootInterval = setInterval(shootDown, 100);
 
-		squares[currentShoot].classList.remove("shoot");
-		if (currentShoot - x > 0) {
+		function shootDown() {
+			// squares[currentShoot].classList.remove("shoot");
+
+			// currentShoot -= x;
+			// squares[currentShoot].classList.add("shoot");
+			// if (squares[currentShoot].classList.contains("invaders")) {
+			// 	squares[currentShoot].classList.remove("invaders");
+			// 	squares[currentShoot].classList.remove("shoot");
+			// 	squares[currentShoot].classList.add("bam");
+			// 	setTimeout(() => {
+			// 		squares[currentShoot].classList.remove("bam");
+			// 	}, 200);
+			// 	score++;
+			// 	invadersTakkenDown.push("invader");
+			// 	clearInterval(shootInterval);
+			// 	console.log("Indeksa e ", invaders.indexOf(currentShoot));
+			// 	let ind = invaders.indexOf(currentShoot);
+			// 	invaders.splice(ind, 1);
+			// }
+			// if (currentShoot < x) {
+			// 	clearInterval(shootInterval);
+			// 	setTimeout(
+			// 		squares[currentShoot].classList.remove("shoot"),
+			// 		100
+			// 	);
+			// }
+			console.log("TCSh is ", currentShoot);
+			squares[currentShoot].classList.remove("shoot");
 			currentShoot -= x;
 			squares[currentShoot].classList.add("shoot");
 			if (squares[currentShoot].classList.contains("invaders")) {
-				squares[currentShoot].classList.remove("invaders");
 				squares[currentShoot].classList.remove("shoot");
+				squares[currentShoot].classList.remove("invaders");
 				squares[currentShoot].classList.add("bam");
-				setTimeout(() => {
-					squares[currentShoot].classList.remove("bam");
-				}, 200);
-				score++;
-				invadersTakkenDown.push("invader");
+
+				setTimeout(
+					() => squares[currentShoot].classList.remove("bam"),
+					250
+				);
 				clearInterval(shootInterval);
-				console.log("Indeksa e ", invaders.indexOf(currentShoot));
-				let ind = invaders.indexOf(currentShoot);
-				invaders = invaders.splice(ind, 1);
+
+				const alienTakenDown = invaders.indexOf(currentShoot);
+				invadersTakenDown.push(alienTakenDown);
+				console.log(invadersTakenDown);
+				score++;
+				result.textContent = score;
 			}
+
+			if (currentShoot < x) {
+				clearInterval(shootInterval);
+				setTimeout(
+					() => squares[currentShoot].classList.remove("shoot"),
+					100
+				);
+			}
+		}
+		switch (e.keyCode) {
+			case 38:
+				shootInterval = setInterval(shootDown, 100);
+				break;
 		}
 	}
 
 	function win() {
-		if (invadersTakkenDown.length === invaders.length) {
-			alert("You win");
+		if (invadersTakenDown.length === invaders.length) {
 			clearInterval(interval);
+			alert("You win");
 		}
 	}
 
@@ -160,11 +250,14 @@ window.onload = function() {
 		const squares = document.querySelectorAll(".grid div");
 		const x = parseInt(document.querySelector("#dim-x").value);
 		if (
-			squares[currentShooterIndex].classList.contains("invaders") ||
-			squares[squares.length - x - 1].classList.contains("invaders")
+			squares[currentShooterIndex].classList.contains(
+				"invaders",
+				"shooter"
+			) ||
+			squares[squares.length - x].classList.contains("invaders")
 		) {
-			alert("You lose");
 			clearInterval(interval);
+			alert("You lose");
 		}
 	}
 
