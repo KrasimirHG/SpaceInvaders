@@ -1,4 +1,4 @@
-window.onload = function () {
+window.onload = function() {
 	const grid = document.querySelector(".grid");
 	const result = document.querySelector("#result");
 	let interval = 0;
@@ -67,13 +67,15 @@ window.onload = function () {
 
 	function start() {
 		//reset
-		clearInterval(interval);
+
+		createBoard();
 		let score = 0;
 		let currentShooterIndex = 202;
 		let currentIndex = 0;
 		let direction = 1;
 		const invadersTakenDown = [];
-		clearBoard();
+		console.log(invaders);
+
 		// const squares = document.querySelectorAll(".grid div");
 		// let currentIndex = 0;
 		// let currentShooterIndex = 202;
@@ -91,6 +93,8 @@ window.onload = function () {
 	function invMove() {
 		const x = parseInt(document.querySelector("#dim-x").value);
 		const squares = document.querySelectorAll(".grid div");
+		console.log(invaders);
+
 		// let leftEdge = 0;
 		// let rightEdge = x;
 		// let lastLeft = aliens[0];
@@ -139,12 +143,17 @@ window.onload = function () {
 			result.textContent = "Game Over";
 			squares[currentShooterIndex].classList.add("bam");
 			clearInterval(interval);
+
+			// setTimeout(clearBoard, 500);
+			console.log(invaders);
 		}
 
 		for (let i = 0; i <= invaders.length - 1; i++) {
 			if (invaders[i] > squares.length - (x - 1)) {
 				result.textContent = "Game Over";
 				clearInterval(interval);
+
+				// setTimeout(clearBoard, 500);
 			}
 		}
 
@@ -152,6 +161,8 @@ window.onload = function () {
 		if (invadersTakenDown.length === invaders.length) {
 			result.textContent = "You Win";
 			clearInterval(interval);
+
+			// setTimeout(clearBoard, 500);
 		}
 	}
 
@@ -202,7 +213,7 @@ window.onload = function () {
 			// 		100
 			// 	);
 			// }
-			console.log("TCSh is ", currentShoot);
+			//console.log("TCSh is ", currentShoot);
 			squares[currentShoot].classList.remove("shoot");
 			currentShoot -= x;
 			squares[currentShoot].classList.add("shoot");
@@ -219,7 +230,7 @@ window.onload = function () {
 
 				const alienTakenDown = invaders.indexOf(currentShoot);
 				invadersTakenDown.push(alienTakenDown);
-				console.log(invadersTakenDown);
+				// console.log(invadersTakenDown);
 				score++;
 				result.textContent = score;
 			}
@@ -233,7 +244,7 @@ window.onload = function () {
 			}
 		}
 		switch (e.keyCode) {
-			case 38:
+			case 82:
 				shootInterval = setInterval(shootDown, 100);
 				break;
 		}
@@ -262,8 +273,45 @@ window.onload = function () {
 	}
 
 	function clearBoard() {
+		console.log("New board");
+		const squares = document.querySelectorAll(".grid div");
 		grid.innerHTML = "";
-		createBoard();
+		squares.forEach((sq) => sq.classList.remove("invaders"));
+		squares.forEach((sq) => sq.classList.remove("shoot"));
+		const invaders = [
+			0,
+			1,
+			2,
+			3,
+			4,
+			5,
+			6,
+			7,
+			8,
+			9,
+			15,
+			16,
+			17,
+			18,
+			19,
+			20,
+			21,
+			22,
+			23,
+			24,
+			30,
+			31,
+			32,
+			33,
+			34,
+			35,
+			36,
+			37,
+			38,
+			39,
+		];
+		console.log(invaders);
+		//createBoard();
 	}
 
 	document.querySelector("#newGame").addEventListener("click", start);
