@@ -75,18 +75,7 @@ window.onload = function() {
 		let direction = 1;
 		const invadersTakenDown = [];
 		console.log(invaders);
-
-		// const squares = document.querySelectorAll(".grid div");
-		// let currentIndex = 0;
-		// let currentShooterIndex = 202;
-		// squares.forEach((sq) => sq.classList.remove("invaders"));
-		// squares.forEach((sq) => sq.classList.remove("shooter"));
-		// for (let i = 0; i < invaders.length; i++) {
-		// 	squares[invaders[currentIndex + i]].classList.add("invaders");
-		// }
-		// squares[202].classList.add("shooter");
-		// console.log(squares);
-		interval = setInterval(invMove, 500);
+		interval = setInterval(invMove, 250);
 	}
 
 	//Invaders move
@@ -94,19 +83,6 @@ window.onload = function() {
 		const x = parseInt(document.querySelector("#dim-x").value);
 		const squares = document.querySelectorAll(".grid div");
 		console.log(invaders);
-
-		// let leftEdge = 0;
-		// let rightEdge = x;
-		// let lastLeft = aliens[0];
-		// let lastRight = aliens[aliens.length - 1];
-		// if (lastRight % x === x - 1 && direction === 1) {
-		// 	currentIndex += x;
-		// 	direction = -1;
-		// } else if (lastLeft % x === 0 && direction === -1) {
-		// 	currentIndex += x;
-		// 	direction = 1;
-		// }
-
 		const leftEdge = invaders[0] % x === 0;
 		const rightEdge = invaders[invaders.length - 1] % x === x - 1;
 
@@ -134,9 +110,6 @@ window.onload = function() {
 			}
 		}
 
-		// win();
-		// lose();
-
 		if (
 			squares[currentShooterIndex].classList.contains("invaders", "shoot")
 		) {
@@ -144,8 +117,7 @@ window.onload = function() {
 			squares[currentShooterIndex].classList.add("bam");
 			clearInterval(interval);
 
-			// setTimeout(clearBoard, 500);
-			console.log(invaders);
+			setTimeout(clearBoard, 3000);
 		}
 
 		for (let i = 0; i <= invaders.length - 1; i++) {
@@ -153,7 +125,7 @@ window.onload = function() {
 				result.textContent = "Game Over";
 				clearInterval(interval);
 
-				// setTimeout(clearBoard, 500);
+				setTimeout(clearBoard, 3000);
 			}
 		}
 
@@ -162,7 +134,7 @@ window.onload = function() {
 			result.textContent = "You Win";
 			clearInterval(interval);
 
-			// setTimeout(clearBoard, 500);
+			setTimeout(clearBoard, 3000);
 		}
 	}
 
@@ -185,35 +157,8 @@ window.onload = function() {
 		const x = parseInt(document.querySelector("#dim-x").value);
 		let currentShoot = currentShooterIndex;
 		let shootInterval;
-		// if (e.keyCode === 13) shootInterval = setInterval(shootDown, 100);
 
 		function shootDown() {
-			// squares[currentShoot].classList.remove("shoot");
-
-			// currentShoot -= x;
-			// squares[currentShoot].classList.add("shoot");
-			// if (squares[currentShoot].classList.contains("invaders")) {
-			// 	squares[currentShoot].classList.remove("invaders");
-			// 	squares[currentShoot].classList.remove("shoot");
-			// 	squares[currentShoot].classList.add("bam");
-			// 	setTimeout(() => {
-			// 		squares[currentShoot].classList.remove("bam");
-			// 	}, 200);
-			// 	score++;
-			// 	invadersTakkenDown.push("invader");
-			// 	clearInterval(shootInterval);
-			// 	console.log("Indeksa e ", invaders.indexOf(currentShoot));
-			// 	let ind = invaders.indexOf(currentShoot);
-			// 	invaders.splice(ind, 1);
-			// }
-			// if (currentShoot < x) {
-			// 	clearInterval(shootInterval);
-			// 	setTimeout(
-			// 		squares[currentShoot].classList.remove("shoot"),
-			// 		100
-			// 	);
-			// }
-			//console.log("TCSh is ", currentShoot);
 			squares[currentShoot].classList.remove("shoot");
 			currentShoot -= x;
 			squares[currentShoot].classList.add("shoot");
@@ -230,7 +175,7 @@ window.onload = function() {
 
 				const alienTakenDown = invaders.indexOf(currentShoot);
 				invadersTakenDown.push(alienTakenDown);
-				// console.log(invadersTakenDown);
+
 				score++;
 				result.textContent = score;
 			}
@@ -247,6 +192,15 @@ window.onload = function() {
 			case 82:
 				shootInterval = setInterval(shootDown, 100);
 				break;
+			case 69:
+				shootInterval = setInterval(shootDown, 100);
+				break;
+			case 87:
+				shootInterval = setInterval(shootDown, 100);
+				break;
+			case 84:
+				shootInterval = setInterval(shootDown, 100);
+				break;
 		}
 	}
 
@@ -254,21 +208,6 @@ window.onload = function() {
 		if (invadersTakenDown.length === invaders.length) {
 			clearInterval(interval);
 			alert("You win");
-		}
-	}
-
-	function lose() {
-		const squares = document.querySelectorAll(".grid div");
-		const x = parseInt(document.querySelector("#dim-x").value);
-		if (
-			squares[currentShooterIndex].classList.contains(
-				"invaders",
-				"shooter"
-			) ||
-			squares[squares.length - x].classList.contains("invaders")
-		) {
-			clearInterval(interval);
-			alert("You lose");
 		}
 	}
 
@@ -311,7 +250,6 @@ window.onload = function() {
 			39,
 		];
 		console.log(invaders);
-		//createBoard();
 	}
 
 	document.querySelector("#newGame").addEventListener("click", start);
